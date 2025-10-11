@@ -1,1 +1,1 @@
-# shared-vpc-endpoint
+# centralized-vpc-endpoints
