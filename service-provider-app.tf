@@ -40,8 +40,8 @@ module "nlb" {
   subnets            = module.central_account_vpc.private_subnets
   internal           = true
 
-  create_security_group = false
-  security_groups       = [module.app_sg.security_group_id]
+  create_security_group      = false
+  security_groups            = [module.app_sg.security_group_id]
   enable_deletion_protection = false
 
   listeners = {
