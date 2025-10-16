@@ -39,7 +39,7 @@ module "central_account_vpc" {
 }
 
 
-#Route traffic  consumer account via TGW
+#Route traffic to consumer account via TGW
 resource "aws_route" "central_to_consumer_route" {
   for_each = {
     for idx, rt_id in local.central_private_route_tables : idx => rt_id

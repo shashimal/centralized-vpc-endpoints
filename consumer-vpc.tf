@@ -42,7 +42,22 @@ module "consumer_account_vpc" {
   }
 }
 
-# Route table entry for sending provider account traffic to TGW
+#TGW attachment for the consumer account VPC
+resource "aws_ec2_transit_gateway_vpc_attachment" "attachment_consumer_vpc" {
+  provider           = aws.consumer-account
+
+  transit_gateway_id = aws_ec2_transit_gateway.main_tgw.id
+  vpc_id             = module.consumer_account_vpc.vpc_id
+  subnet_ids         = module.consumer_account_vpc.private_subnets
+
+  depends_on = [
+    aws_ram_principal_association.consumer_account_association
+  ]
+
+  tags = { Name = "consumer-vpc-attachment" }
+}
+
+#Route traffic to service provider account via TGW
 resource "aws_route" "consumer_to_provider_vpc_route" {
   for_each = {
     for idx, rt_id in local.consumer_private_route_tables : idx => rt_id
@@ -53,5 +68,24 @@ resource "aws_route" "consumer_to_provider_vpc_route" {
   destination_cidr_block = module.central_account_vpc.vpc_cidr_block
   transit_gateway_id     = aws_ec2_transit_gateway.main_tgw.id
 
-  depends_on = [module.consumer_account_vpc]
+  depends_on = [
+    module.consumer_account_vpc,
+    aws_ec2_transit_gateway_vpc_attachment.attachment_consumer_vpc
+  ]
+}
+
+module "consumer_lambda_sg" {
+  source  = "terraform-aws-modules/security-group/aws"
+  version = "~>5.2"
+
+  providers = {
+    aws = aws.consumer-account
+  }
+
+  name                = local.counsumer_app_name
+  description         = local.counsumer_app_name
+  vpc_id              = module.consumer_account_vpc.vpc_id
+  ingress_cidr_blocks = [module.consumer_account_vpc.vpc_cidr_block]
+  ingress_rules       = ["http-80-tcp", "https-443-tcp"]
+  egress_rules        = ["all-all"]
 }
