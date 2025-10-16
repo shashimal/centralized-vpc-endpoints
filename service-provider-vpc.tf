@@ -1,3 +1,6 @@
+################################ Provider account VPC resources ###############################
+###############################################################################################
+
 locals {
   central_private_route_tables = module.central_account_vpc.private_route_table_ids
 }
