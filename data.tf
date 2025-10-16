@@ -12,3 +12,7 @@ data "aws_ami" "amazon_linux" {
     values = ["hvm"]
   }
 }
+
+data "aws_route53_zone" "zone" {
+  name = local.app_domain
+}
