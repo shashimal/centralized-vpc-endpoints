@@ -51,7 +51,7 @@ resource "aws_ec2_transit_gateway_vpc_attachment" "attachment_consumer_vpc" {
   subnet_ids         = module.consumer_account_vpc.private_subnets
 
   depends_on = [
-    aws_ram_principal_association.consumer_account_association
+    aws_ram_resource_share_accepter.tgw_accepter_consumer_account
   ]
 
   tags = { Name = "consumer-vpc-attachment" }

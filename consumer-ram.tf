@@ -18,7 +18,7 @@ resource "aws_route53_resolver_rule_association" "forward_to_inbound_vpc_assoc" 
   name             = "forward-to-inbound-assoc"
 
   depends_on = [
-    aws_ram_resource_share.resolver_rule_share,
+    aws_ram_resource_share_accepter.inbound_resolver
   ]
 }
 
