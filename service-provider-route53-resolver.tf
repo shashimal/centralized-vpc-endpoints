@@ -54,8 +54,8 @@ resource "aws_route53_resolver_endpoint" "outbound_interface_endpoint_resolver" 
 #######################################
 # Route53 Resolver Rule to Forward to Inbound
 #######################################
-resource "aws_route53_resolver_rule" "forward_to_inbound" {
-  name                 = "interface-endpoint-traffice-forward-to-inbound"
+resource "aws_route53_resolver_rule" "forward_outbound_to_inbound" {
+  name                 = "interface-endpoint-traffice-forward-outbound-to-inbound"
   domain_name          = local.app_domain # Private hosted zone DNS
   rule_type            = "FORWARD"
   resolver_endpoint_id = aws_route53_resolver_endpoint.outbound_interface_endpoint_resolver.id
