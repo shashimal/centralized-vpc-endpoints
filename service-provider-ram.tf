@@ -33,7 +33,7 @@ resource "aws_ram_resource_share" "resolver_rule_share" {
 #######################################
 # Share Resolver Rule with Another AWS Account
 #######################################
-resource "aws_ram_principal_association" "share_with_account" {
+resource "aws_ram_principal_association" "resolver_rule_share_with_consumer_account" {
   resource_share_arn = aws_ram_resource_share.resolver_rule_share.arn
   principal          = local.counsumer_account_id
 }
@@ -41,24 +41,7 @@ resource "aws_ram_principal_association" "share_with_account" {
 #######################################
 # Associate Resolver Rule as a Shared Resource
 #######################################
-resource "aws_ram_resource_association" "outbound_resolver_rule_association" {
+resource "aws_ram_resource_association" "forward_outbound_to_inbound_resolver_rule_association" {
   resource_share_arn = aws_ram_resource_share.resolver_rule_share.arn
   resource_arn       = aws_route53_resolver_rule.forward_outbound_to_inbound.arn
 }
-
-# resource "aws_ram_resource_share" "route53_profile_share" {
-#   name                      = "route53-profile-share"
-#   allow_external_principals = true
-#   tags = {
-#     Name = "route53-profile-share"
-#   }
-# }
-# resource "aws_ram_principal_association" "route53_profile_share_with_consumer" {
-#   resource_share_arn = aws_ram_resource_share.route53_profile_share.arn
-#   principal          = local.counsumer_account_id
-# }
-#
-# resource "aws_ram_resource_association" "route53_profile_association" {
-#   resource_share_arn = aws_ram_resource_share.route53_profile_share.arn
-#   resource_arn       = aws_route53profiles_profile.shared_endpoint_profile.arn
-# }
